@@ -1,83 +1,48 @@
 import java.util.Scanner;
 
-class Employee {
-    int empid;
-    String name;
-    double salary;
-    String address;
-
-    Employee(int id, String n, double s, String addr) {
-        empid = id;
-        name = n;
-        salary = s;
-        address = addr;
+// Step 1: User-defined Exception
+class InvalidCredentialsException extends Exception {
+    public InvalidCredentialsException(String message) {
+        super(message);
     }
 }
 
-class Teacher extends Employee {
-    String department;
-    String subject;
+// Step 2: Authentication Class
+class UserAuthentication {
 
-    Teacher(int id, String n, double s, String addr, String dept, String sub) {
-        super(id, n, s, addr);
-        department = dept;
-        subject = sub;
-    }
+    private static final String USERNAME = "admin";
+    private static final String PASSWORD = "1234";
 
-    void display() {
-        System.out.println("Employee ID: " + empid);
-        System.out.println("Name: " + name);
-        System.out.println("Salary: " + salary);
-        System.out.println("Address: " + address);
-        System.out.println("Department: " + department);
-        System.out.println("Subject: " + subject);
-        System.out.println("-----------------------");
+    public static void authenticate(String username, String password) 
+            throws InvalidCredentialsException {
+
+        if (!USERNAME.equals(username) || !PASSWORD.equals(password)) {
+            throw new InvalidCredentialsException("Invalid username or password!");
+        } else {
+            System.out.println("Authentication successful!");
+        }
     }
 }
 
-public class Main 
-{
+// Step 3: Main Class
+public class Main {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.print("Enter number of teachers: ");
-        int n = sc.nextInt();
-        sc.nextLine();
+        // Taking user input
+        System.out.print("Enter username: ");
+        String username = sc.nextLine();
 
-        Teacher[] t = new Teacher[n];
+        System.out.print("Enter password: ");
+        String password = sc.nextLine();
 
-        for (int i = 0; i < n; i++) {
-
-            System.out.println("Enter details of teacher " + (i + 1));
-
-            System.out.print("Emp ID: ");
-            int id = sc.nextInt();
-            sc.nextLine();
-
-            System.out.print("Name: ");
-            String name = sc.nextLine();
-
-            System.out.print("Salary: ");
-            double salary = sc.nextDouble();
-            sc.nextLine();
-
-            System.out.print("Address: ");
-            String addr = sc.nextLine();
-
-            System.out.print("Department: ");
-            String dept = sc.nextLine();
-
-            System.out.print("Subject: ");
-            String sub = sc.nextLine();
-
-            t[i] = new Teacher(id, name, salary, addr, dept, sub);
+        try {
+            UserAuthentication.authenticate(username, password);
+        } catch (InvalidCredentialsException e) {
+            System.out.println(e.getMessage());
         }
 
-        System.out.println("\nTeacher Details");
-
-        for (int i = 0; i < n; i++) {
-            t[i].display();
-        }
+        sc.close();
     }
 }
