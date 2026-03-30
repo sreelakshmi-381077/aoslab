@@ -1,47 +1,101 @@
 import java.util.Scanner;
 
-// Step 1: User-defined Exception
-class InvalidCredentialsException extends Exception {
-    public InvalidCredentialsException(String message) {
-        super(message);
+// Step 1: Generic Stack Class
+class Stack<T> {
+    private int top;
+    private int capacity;
+    private T[] stackArray;
+
+    // Constructor
+    @SuppressWarnings("unchecked")
+    public Stack(int size) {
+        capacity = size;
+        stackArray = (T[]) new Object[size];
+        top = -1;
     }
-}
 
-// Step 2: Authentication Class
-class UserAuthentication {
-
-    private static final String USERNAME = "admin";
-    private static final String PASSWORD = "1234";
-
-    public static void authenticate(String username, String password) 
-            throws InvalidCredentialsException {
-
-        if (!USERNAME.equals(username) || !PASSWORD.equals(password)) {
-            throw new InvalidCredentialsException("Invalid username or password!");
+    // Push operation
+    public void push(T element) {
+        if (top == capacity - 1) {
+            System.out.println("Stack Overflow!");
         } else {
-            System.out.println("Authentication successful!");
+            stackArray[++top] = element;
+            System.out.println(element + " pushed into stack");
+        }
+    }
+
+    // Pop operation
+    public T pop() {
+        if (top == -1) {
+            System.out.println("Stack Underflow!");
+            return null;
+        } else {
+            return stackArray[top--];
+        }
+    }
+
+    // Display stack
+    public void display() {
+        if (top == -1) {
+            System.out.println("Stack is empty");
+        } else {
+            System.out.print("Stack elements: ");
+            for (int i = top; i >= 0; i--) {
+                System.out.print(stackArray[i] + " ");
+            }
+            System.out.println();
         }
     }
 }
 
-// Step 3: Main Class
+// Step 2: Main Class
 public class Main {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-        // Taking user input
-        System.out.print("Enter username: ");
-        String username = sc.nextLine();
+        System.out.print("Enter stack size: ");
+        int size = sc.nextInt();
 
-        System.out.print("Enter password: ");
-        String password = sc.nextLine();
+        Stack<Integer> stack = new Stack<>(size);
 
-        try {
-            UserAuthentication.authenticate(username, password);
-        } catch (InvalidCredentialsException e) {
-            System.out.println(e.getMessage());
-        }
+        int choice;
+
+        do {
+            System.out.println("\n1. Push");
+            System.out.println("2. Pop");
+            System.out.println("3. Display");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter element to push: ");
+                    int value = sc.nextInt();
+                    stack.push(value);
+                    break;
+
+                case 2:
+                    Integer popped = stack.pop();
+                    if (popped != null) {
+                        System.out.println("Popped element: " + popped);
+                    }
+                    break;
+
+                case 3:
+                    stack.display();
+                    break;
+
+                case 4:
+                    System.out.println("Exiting...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+
+        } while (choice != 4);
 
         sc.close();
     }
